@@ -1,10 +1,14 @@
 package net.smartgekko.mygooglemap.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,13 +24,21 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
-import net.smartgekko.mygooglemap.*
+import net.smartgekko.mygooglemap.INIT_LAT
+import net.smartgekko.mygooglemap.INIT_LNG
+import net.smartgekko.mygooglemap.INIT_ZOOM
+import net.smartgekko.mygooglemap.R
 import net.smartgekko.mygooglemap.viewmodel.AppState
 import net.smartgekko.mygooglemap.viewmodel.GoogleMapsViewModel
+
 
 class GoogleMapsFragment : Fragment() {
     private lateinit var viewModel: GoogleMapsViewModel
@@ -43,7 +55,7 @@ class GoogleMapsFragment : Fragment() {
     private val callback = OnMapReadyCallback { googleMap ->
         val initialPlace = LatLng(INIT_LAT, INIT_LNG)
         map = googleMap
-        map.mapType=GoogleMap.MAP_TYPE_NORMAL
+        map.mapType = GoogleMap.MAP_TYPE_NORMAL
         markers.clear()
 
         setMarker(initialPlace)?.let { markers.add(it) }
@@ -54,6 +66,9 @@ class GoogleMapsFragment : Fragment() {
             clearMap()
             setMarker(latLng)?.let { markers.add(it) }
             moveCameratoMarkerWithZoom(latLng, seekBar.progress.toFloat())
+        }
+        map.setOnCameraMoveListener {
+            seekBar.progress=map.cameraPosition.zoom.toInt()
         }
     }
 
@@ -117,18 +132,10 @@ class GoogleMapsFragment : Fragment() {
         buttonClear.setOnClickListener {
             searchAddress.setText("")
             resetMap()
-            /*
-            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.toggleSoftInput(SHOW_FORCED,0)
-             */
         }
 
         buttonAnty.setOnClickListener {
-            if (markers.size == 1) {
                 goToAntipod()
-            } else {
-                showSnack("Where are no initial point setted.\nPlease use New search, or tap on Initial point")
-            }
         }
     }
 
@@ -137,7 +144,7 @@ class GoogleMapsFragment : Fragment() {
         markers.clear()
         map.clear()
         currentPos = LatLng(INIT_LAT, INIT_LNG)
-        seekBar.progress = INIT_ZOOM.toInt()
+       // seekBar.progress = INIT_ZOOM.toInt()
     }
 
     private fun resetMap() {
@@ -154,34 +161,62 @@ class GoogleMapsFragment : Fragment() {
     }
 
     private fun goToAntipod() {
-        val aLat = 0 - map.cameraPosition.target.latitude
-        val aLng = 0 - (180 - map.cameraPosition.target.longitude)
-        val antiPoint = LatLng(aLat, aLng)
-        setMarker(antiPoint)?.let { markers.add(it) }
-        moveCameratoMarkerWithZoom(antiPoint, INIT_ZOOM)
-        seekBar.progress = INIT_ZOOM.toInt()
+        when(markers.size) {
+            1->{
+            val aLat = 0 - markers[0].position.latitude
+            val aLng = 0 - (180 - markers[0].position.longitude)
+            val antiPoint = LatLng(aLat, aLng)
+            setMarker(antiPoint)?.let { markers.add(it) }
+            moveCameratoMarkerWithZoom(antiPoint, INIT_ZOOM)
+            seekBar.progress = INIT_ZOOM.toInt()
+            }
+            2->{
+               for(i in 0..1){
+                   if(currentPos!=markers[i].position){
+                       moveCameratoMarkerWithZoom(markers[i].position, INIT_ZOOM)
+                       currentPos=markers[i].position
+                       break
+                   }
+               }
+            }
+        }
     }
 
     private fun setMarker(
         location: LatLng
     ): Marker? {
-        val currentMarker = map.addMarker(
-            MarkerOptions()
-                .position(location)
-                .title("")
-                .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromDrawable(R.drawable.ic_map_marker)))
-        )
-        currentPos=location
+        val currentMarker: Marker?
+        val icon: Int
+        val mShift:Float
+
+        if (location.latitude >= 0) {
+           mShift=1.0f
+            icon=R.drawable.fall_boy_up
+        } else {
+            mShift=0.0f
+            icon=R.drawable.fall_boy_down
+        }
+        val m = MarkerOptions()
+            .position(location)
+            .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromDrawable(icon)))
+            .anchor(0.5f, mShift)
+
+        currentMarker = map.addMarker(m)
+        currentMarker.showInfoWindow()
+
+        currentPos = location
         return currentMarker
     }
 
     private fun moveCameratoMarkerWithZoom(location: LatLng, zoom: Float) {
         view?.post {
-            map.moveCamera(
+            map.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                     location,
                     zoom
-                )
+                ),
+                1000,
+                null
             )
         }
     }
