@@ -2,6 +2,8 @@ package net.smartgekko.mygooglemap.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.Marker
 import net.smartgekko.mygooglemap.R
 import net.smartgekko.mygooglemap.databinding.ActivityMainBinding
 
