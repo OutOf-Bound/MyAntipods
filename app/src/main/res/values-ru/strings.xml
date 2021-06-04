@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Поиск антиподов</string>
+    <string name="search">Поиск</string>
+    <string name="marker_start">Старт</string>
+    <string name="antypod">Антипод</string>
+    <string name="clear">Новый поиск</string>
+    <string name="input_location_for_search">Тапните по карте или введите текст для поиска здесь</string>
+    <string name="no_address">Данных не найдено</string>
+    <string name="search_error">Ошибка поиска объекта</string>
+
+</resources>

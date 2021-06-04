@@ -1,0 +1,2 @@
+rootProject.name = "MyAntipods"
+include ':app'

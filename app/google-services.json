@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "963070632487",
+    "project_id": "mymap-dd045",
+    "storage_bucket": "mymap-dd045.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963070632487:android:4ebc801d0ed29de978e402",
+        "android_client_info": {
+          "package_name": "net.smartgekko.mygooglemap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "963070632487-8e9uffj69hq545ll1p4tqkldlq5jarmi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGFxZBvpXZzaGQrVXY5A4TYji1W3FyLFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "963070632487-8e9uffj69hq545ll1p4tqkldlq5jarmi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
