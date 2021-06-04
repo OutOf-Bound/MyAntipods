@@ -5,8 +5,73 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="15dp"
     android:orientation="horizontal"
     tools:context=".view.MainActivity">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/antiFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="84dp"
+        android:layout_marginBottom="116dp"
+        android:background="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
+        android:clickable="true"
+        android:elevation="15dp"
+        android:src="@drawable/anti_a"
+        android:visibility="visible"
+        app:backgroundTint="#000000"
+        app:borderWidth="1dp"
+        app:elevation="15dp"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="#039BE5" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/clearFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="120dp"
+        android:background="#FFFFFF"
+        android:backgroundTint="#CCFFFFFF"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:src="@drawable/anti_c"
+        android:visibility="visible"
+        app:backgroundTint="#000000"
+        app:borderWidth="1dp"
+        app:elevation="10dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="#F80303" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/searchFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginEnd="87dp"
+        android:layout_marginBottom="55dp"
+        android:background="#FFFFFF"
+        android:backgroundTint="#CCFFFFFF"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:src="@drawable/anti_s"
+        android:visibility="visible"
+        app:backgroundTint="#000000"
+        app:borderWidth="1dp"
+        app:elevation="10dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="#03F80E" />
+
 
     <LinearLayout
         android:id="@+id/seekbarLayout"
@@ -31,26 +96,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/loadingLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="15dp"
-        android:orientation="vertical"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="visible" />
-    </LinearLayout>
-
     <include
         android:id="@+id/include"
         layout="@layout/fragment_google_maps"
@@ -59,21 +104,25 @@
         tools:layout_editor_absoluteY="57dp" />
 
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/searchLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#CCFFFFFF"
-        android:elevation="10dp"
-        android:orientation="vertical"
-        android:padding="4dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/b_search_layout"
+        android:elevation="15dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/antiFab"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <EditText
             android:id="@+id/searchAddress"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:ems="10"
             android:fontFamily="sans-serif-condensed-light"
             android:hint="@string/input_location_for_search"
@@ -83,47 +132,39 @@
             android:maxLines="2"
             android:singleLine="false"
             android:textAlignment="center"
+            android:textColorHighlight="#000000"
             android:textColorLink="#000000"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/loadingLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:padding="4dp">
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/buttonAnty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:background="@drawable/b_favorites_button_search"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="@string/antypod"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/buttonClear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/b_favorites_button_search"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="@string/clear"
-                android:textAlignment="center"
-                android:textSize="20sp" />
+                android:indeterminate="true"
+                android:indeterminateTint="#979595"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

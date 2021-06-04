@@ -1,36 +1,31 @@
 package net.smartgekko.mygooglemap.view
 
-import android.annotation.SuppressLint
+
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.SeekBar
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import net.smartgekko.mygooglemap.INIT_LAT
 import net.smartgekko.mygooglemap.INIT_LNG
@@ -45,12 +40,15 @@ class GoogleMapsFragment : Fragment() {
     private lateinit var map: GoogleMap
     private val markers: ArrayList<Marker> = arrayListOf()
     private lateinit var searchAddress: EditText
-    private lateinit var buttonClear: TextView
-    private lateinit var buttonAnty: TextView
-    private lateinit var loadingLayout: LinearLayout
+    private lateinit var loadingLayout: ConstraintLayout
     private lateinit var rootLayout: ConstraintLayout
+    private lateinit var searchLayout: ConstraintLayout
     private lateinit var seekBar: SeekBar
     private lateinit var currentPos: LatLng
+    private lateinit var antiFab: FloatingActionButton
+    private lateinit var clearFab: FloatingActionButton
+    private lateinit var searchFab: FloatingActionButton
+    private var fabImgAngle: Float = 0.0f
 
     private val callback = OnMapReadyCallback { googleMap ->
         val initialPlace = LatLng(INIT_LAT, INIT_LNG)
@@ -67,8 +65,10 @@ class GoogleMapsFragment : Fragment() {
             setMarker(latLng)?.let { markers.add(it) }
             moveCameratoMarkerWithZoom(latLng, seekBar.progress.toFloat())
         }
+
         map.setOnCameraMoveListener {
-            seekBar.progress=map.cameraPosition.zoom.toInt()
+
+            seekBar.progress = map.cameraPosition.zoom.toInt()
         }
     }
 
@@ -78,11 +78,13 @@ class GoogleMapsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         searchAddress = container!!.findViewById(R.id.searchAddress)
-        buttonClear = container.findViewById(R.id.buttonClear)
-        buttonAnty = container.findViewById(R.id.buttonAnty)
         loadingLayout = container.findViewById(R.id.loadingLayout)
         rootLayout = container.findViewById(R.id.rootLayout)
+        searchLayout = container.findViewById(R.id.searchLayout)
         seekBar = container.findViewById(R.id.seekBar)
+        antiFab = container.findViewById(R.id.antiFab)
+        clearFab = container.findViewById(R.id.clearFab)
+        searchFab = container.findViewById(R.id.searchFab)
         return inflater.inflate(R.layout.fragment_google_maps, container, false)
     }
 
@@ -95,6 +97,26 @@ class GoogleMapsFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(GoogleMapsViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner, { renderData(it) })
         lifecycle.addObserver(viewModel)
+
+        antiFab.setOnClickListener {
+            searchLayout.visibility = View.GONE
+            goToAntipod()
+        }
+
+        clearFab.setOnClickListener {
+            searchAddress.setText("")
+            searchLayout.visibility = View.GONE
+            resetMap()
+        }
+
+        searchFab.setOnClickListener {
+            searchAddress.setText("")
+            if (searchLayout.visibility == View.VISIBLE) {
+                searchLayout.visibility = View.GONE
+            } else {
+                searchLayout.visibility = View.VISIBLE
+            }
+        }
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -128,15 +150,6 @@ class GoogleMapsFragment : Fragment() {
                 false
             }
         }
-
-        buttonClear.setOnClickListener {
-            searchAddress.setText("")
-            resetMap()
-        }
-
-        buttonAnty.setOnClickListener {
-                goToAntipod()
-        }
     }
 
 
@@ -144,7 +157,6 @@ class GoogleMapsFragment : Fragment() {
         markers.clear()
         map.clear()
         currentPos = LatLng(INIT_LAT, INIT_LNG)
-       // seekBar.progress = INIT_ZOOM.toInt()
     }
 
     private fun resetMap() {
@@ -161,25 +173,33 @@ class GoogleMapsFragment : Fragment() {
     }
 
     private fun goToAntipod() {
-        when(markers.size) {
-            1->{
-            val aLat = 0 - markers[0].position.latitude
-            val aLng = 0 - (180 - markers[0].position.longitude)
-            val antiPoint = LatLng(aLat, aLng)
-            setMarker(antiPoint)?.let { markers.add(it) }
-            moveCameratoMarkerWithZoom(antiPoint, INIT_ZOOM)
-            seekBar.progress = INIT_ZOOM.toInt()
+        when (markers.size) {
+            1 -> {
+                val aLat = 0 - markers[0].position.latitude
+                val aLng = 0 - (180 - markers[0].position.longitude)
+                val antiPoint = LatLng(aLat, aLng)
+                setMarker(antiPoint)?.let { markers.add(it) }
+                moveCameratoMarkerWithZoom(antiPoint, INIT_ZOOM)
+                seekBar.progress = INIT_ZOOM.toInt()
+                checkFab()
             }
-            2->{
-               for(i in 0..1){
-                   if(currentPos!=markers[i].position){
-                       moveCameratoMarkerWithZoom(markers[i].position, INIT_ZOOM)
-                       currentPos=markers[i].position
-                       break
-                   }
-               }
+            2 -> {
+                for (i in 0..1) {
+                    if (currentPos != markers[i].position) {
+                        moveCameratoMarkerWithZoom(markers[i].position, INIT_ZOOM)
+                        currentPos = markers[i].position
+                        break
+                    }
+                }
+                checkFab()
             }
         }
+
+    }
+
+    private fun checkFab() {
+        if (fabImgAngle == 0.0f) fabImgAngle = 180.0f else fabImgAngle = 0.0f
+        antiFab.animate().rotation(fabImgAngle).setDuration(1000);
     }
 
     private fun setMarker(
@@ -187,14 +207,14 @@ class GoogleMapsFragment : Fragment() {
     ): Marker? {
         val currentMarker: Marker?
         val icon: Int
-        val mShift:Float
+        val mShift: Float
 
         if (location.latitude >= 0) {
-           mShift=1.0f
-            icon=R.drawable.fall_boy_up
+            mShift = 1.0f
+            icon = R.drawable.fall_boy_up
         } else {
-            mShift=0.0f
-            icon=R.drawable.fall_boy_down
+            mShift = 0.0f
+            icon = R.drawable.fall_boy_down
         }
         val m = MarkerOptions()
             .position(location)
