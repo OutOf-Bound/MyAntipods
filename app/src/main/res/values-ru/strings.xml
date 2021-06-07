@@ -5,7 +5,7 @@
     <string name="marker_start">Старт</string>
     <string name="antypod">Антипод</string>
     <string name="clear">Новый поиск</string>
-    <string name="input_location_for_search">Тапните по карте или введите текст для поиска здесь</string>
+    <string name="input_location_for_search">Введите текст для поиска здесь</string>
     <string name="no_address">Данных не найдено</string>
     <string name="search_error">Ошибка поиска объекта</string>
 

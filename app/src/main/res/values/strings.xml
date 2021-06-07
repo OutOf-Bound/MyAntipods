@@ -4,7 +4,7 @@
     <string name="marker_start">Start</string>
     <string name="antypod">Show antipod</string>
     <string name="clear">Clear for New</string>
-    <string name="input_location_for_search">Tap on the map, or input text here for search</string>
+    <string name="input_location_for_search">Input text here for search</string>
     <string name="no_address">Where are no address there</string>
     <string name="search_error">Searching location Error</string>
 </resources>
