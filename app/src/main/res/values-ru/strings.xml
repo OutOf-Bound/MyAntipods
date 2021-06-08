@@ -8,7 +8,7 @@
     <string name="input_location_for_search">Введите текст для поиска здесь</string>
     <string name="no_address">Данных не найдено</string>
     <string name="search_error">Ошибка поиска объекта</string>
-    <string name="no_initial_point">Не задана исходная точка</string>
+    <string name="no_initial_point">Не задана первая точка</string>
     <string name="map_resetted">Карта установлена в исходное состояние</string>
 
 </resources>
