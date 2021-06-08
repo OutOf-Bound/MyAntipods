@@ -1,6 +1,7 @@
 package net.smartgekko.mygooglemap.view
 
 
+import android.R.attr.data
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -13,6 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -107,6 +109,7 @@ class GoogleMapsFragment : Fragment() {
             searchAddress.setText("")
             searchLayout.visibility = View.GONE
             resetMap()
+            showMsg(resources.getString(R.string.map_resetted))
         }
 
         searchFab.setOnClickListener {
@@ -192,6 +195,9 @@ class GoogleMapsFragment : Fragment() {
                     }
                 }
                 checkFab()
+            }
+            else ->{
+                showMsg(resources.getString(R.string.no_initial_point))
             }
         }
 
@@ -294,6 +300,13 @@ class GoogleMapsFragment : Fragment() {
             rootLayout,
             msg,
             Snackbar.LENGTH_LONG
+        ).show()
+    }
+
+    private fun showMsg(msg:String){
+        Toast.makeText(
+            activity, msg,
+            Toast.LENGTH_SHORT
         ).show()
     }
 }

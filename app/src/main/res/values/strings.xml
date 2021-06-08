@@ -7,4 +7,6 @@
     <string name="input_location_for_search">Input text here for search</string>
     <string name="no_address">Where are no address there</string>
     <string name="search_error">Searching location Error</string>
+    <string name="no_initial_point">There are no initial point setted</string>
+    <string name="map_resetted">Map has been reset to the initial state</string>
 </resources>
