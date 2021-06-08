@@ -30,7 +30,6 @@ object MapRepository {
     private var okHttp: OkHttpClient
 
     init {
-        //  val uA = System.getProperty("http.agent")
         val uA = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0"
         okHttp = OkHttpClient.Builder().addInterceptor(UserAgentInterceptor(uA)).build()
         val retrofit = Retrofit.Builder()
