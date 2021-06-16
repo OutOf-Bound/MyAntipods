@@ -24,7 +24,7 @@ class GoogleMapsViewModel(private val liveDataToObserve: MutableLiveData<AppStat
                 liveDataToObserve.postValue(AppState.Error(t))
             }
 
-            MapRepository.getLocationbyAddress(
+            MapRepository.getLocationByAddress(
                 address,
                 onSuccess = ::onObjectReceived,
                 onError = ::onError

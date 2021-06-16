@@ -121,7 +121,7 @@
         android:elevation="15dp"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/antiFab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

@@ -1,9 +1,6 @@
 package net.smartgekko.mygooglemap.model
 
-import net.smartgekko.mygooglemap.API_BASE_URL
-import net.smartgekko.mygooglemap.GEO_API_FORMAT_JSON
-import net.smartgekko.mygooglemap.GEO_API_KEY
-import net.smartgekko.mygooglemap.GEO_API_RESULTS_NUMBER
+import net.smartgekko.mygooglemap.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -30,7 +27,7 @@ object MapRepository {
     private var okHttp: OkHttpClient
 
     init {
-        val uA = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0"
+        val uA = HTTP_AGENT
         okHttp = OkHttpClient.Builder().addInterceptor(UserAgentInterceptor(uA)).build()
         val retrofit = Retrofit.Builder()
             .baseUrl(API_BASE_URL)
@@ -40,7 +37,7 @@ object MapRepository {
         api = retrofit.create(Api::class.java)
     }
 
-    fun getLocationbyAddress(
+    fun getLocationByAddress(
         addressdLine: String,
         onSuccess: (mapObject: MapObject) -> Unit,
         onError: (t: Throwable) -> Unit
@@ -55,10 +52,11 @@ object MapRepository {
                         val responseBody = response.body()
 
                         if (responseBody != null && responseBody.response.geoObjectCollection.featureMember.isNotEmpty()) {
+                            val objectDescription = responseBody.response.geoObjectCollection.featureMember[0].geoObjects.description
                             val objectName =
                                 responseBody.response.geoObjectCollection.featureMember[0].geoObjects.description +
                                         ", " + responseBody.response.geoObjectCollection.featureMember[0].geoObjects.name
-                            val coordinates =
+                            val coordinates =responseBody.response.geoObjectCollection.featureMember[0].geoObjects.description
                                 (responseBody.response.geoObjectCollection.featureMember[0].geoObjects.point.pos).split(
                                     " "
                                 ).toTypedArray()
