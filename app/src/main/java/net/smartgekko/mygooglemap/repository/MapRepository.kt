@@ -56,7 +56,7 @@ object MapRepository {
                             val objectName =
                                 responseBody.response.geoObjectCollection.featureMember[0].geoObjects.description +
                                         ", " + responseBody.response.geoObjectCollection.featureMember[0].geoObjects.name
-                            val coordinates =responseBody.response.geoObjectCollection.featureMember[0].geoObjects.description
+                            val coordinates =
                                 (responseBody.response.geoObjectCollection.featureMember[0].geoObjects.point.pos).split(
                                     " "
                                 ).toTypedArray()
